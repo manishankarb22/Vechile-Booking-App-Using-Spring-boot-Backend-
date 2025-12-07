@@ -1,202 +1,228 @@
-# VBooking — Spring Boot + React (Vite) Vehicle Booking Application
+🚗 VBooking — Vehicle Booking Application
+Spring Boot (Java 17) + React (Vite + TypeScript) Full-Stack System
+📌 Overview
+VBooking is a full-stack Vehicle Booking Application built using:
 
-✅ Project overview
+Spring Boot (Java 17) for backend REST APIs
 
-VBooking is a full-stack vehicle booking application comprised of:
-- Backend: Java 17 + Spring Boot (REST API) with MySQL persistence, JWT authentication, email OTP verification, Google OAuth login, and scheduling/async tasks.
-- Frontend: React + TypeScript + Vite (single page application) for signup/login, booking flow, payments (mock), and booking management.
+React + TypeScript + Vite for the frontend
 
-This repository contains two main folders:
-- `FinalProject/` — Spring Boot backend
-- `Vbooking/` — Frontend (React + Vite)
+MySQL for persistence
 
----
+JWT Authentication, Email OTP Verification, and Google OAuth Login
 
-## Key features
-- User signup with email OTP verification
-- Google OAuth sign-in
-- JWT-based authentication and protected APIs
-- CRUD booking endpoints (create, list, details, cancel)
-- Booking statistics (per user)
-- Email notifications for OTP, booking confirmation & cancellation
-- Simple client-side payment flow (mock) and logging
-- CORS set up to allow frontend on localhost
+Clean modular structure with Booking, Users, Authentication, and Notification modules
 
----
+This is a final-year ready project with real-world scalable architecture.
 
-## Tech stack
-- Backend
-  - Java 17, Spring Boot 3.5.7
-  - Spring Security (JWT)
-  - Spring Data JPA, MySQL
-  - Spring Mail + JavaMailSender
-  - Jackson for JSON
-  - Asynchronous tasks & scheduling for email and cleanup
-- Frontend
-  - React 19 + TypeScript
-  - Vite dev server (port 5173 by default)
-  - axios for HTTP client
-  - react-router for routing
+✨ Key Features
+🔐 Authentication & Authorization
+Email signup with OTP verification
 
----
+Secure login using JWT
 
-## Quick start
+Google OAuth login support
 
-Prerequisites:
-- Java 17
-- Maven (or use the included Maven wrapper)
-- Node.js (v18+) and npm
-- MySQL database or Docker
+Route protection on frontend
 
-### Backend (Spring Boot)
-Windows (PowerShell) commands:
+🚗 Booking Management
+Create a booking
 
-```powershell
-cd "FinalProject"
-# Run via Maven wrapper
-.\mvnw.cmd spring-boot:run
-# or build and run
-.\mvnw.cmd clean package
-java -jar target/FinalProject-0.0.1-SNAPSHOT.war
-```
+List user-specific bookings
 
-If you're using Docker for the database, create a local MySQL container:
+Cancel bookings
 
-```powershell
-# Example (change password and DB name as needed):
-docker run --name vbooking-mysql -e MYSQL_ROOT_PASSWORD=1234 -e MYSQL_DATABASE=auth_system_db -p 3306:3306 -d mysql:8.0
-```
+View upcoming / current / past bookings
 
-Things to check in `FinalProject/src/main/resources/application.properties`:
-- `spring.datasource.url` — DB host/port
-- `spring.datasource.username`, `spring.datasource.password`
-- `jwt.secret` — set a secure value for JWT signing
-- `jwt.expiration` — expiration in milliseconds
-- `spring.mail.username`, `spring.mail.password` — setup credentials for sending OTP / booking mails
-- `google.client.id`, `google.client.secret` — if enabling Google OAuth
+Booking statistics dashboard
 
-Note: The repo includes some default dev values (like `root`/`1234`) that should be updated in production.
+📧 Email Notifications
+OTP emails
 
-### Frontend (Vite + React)
+Booking confirmation and cancellation emails
 
-```powershell
-cd "Vbooking"
+Asynchronous email sending
+
+💸 Payment Flow (Mock)
+User-friendly client-side payment simulation
+
+Logging & booking confirmation
+
+🛠 Additional Features
+CORS configured for dev
+
+Clean layered Spring architecture
+
+Auto schema generation
+
+Environment-based config support
+
+🏗 System Architecture
+vbnet
+Copy code
+            ┌──────────────────────────────────────┐
+            │               Frontend                │
+            │     React + TypeScript + Vite        │
+            │  Login | Signup | Booking | Payments │
+            └──────────────────────────────────────┘
+                           │   REST API Calls
+                           ▼
+┌────────────────────────────────────────────────────────────────┐
+│                           Backend (Spring Boot)                │
+│                                                                │
+│   ┌──────────────┐   ┌────────────────────┐   ┌────────────┐  │
+│   │ Auth Module  │   │ Booking Module     │   │ Email OTP  │  │
+│   │ JWT + OAuth  │   │ CRUD Operations    │   │ Async Mail │  │
+│   └──────────────┘   └────────────────────┘   └────────────┘  │
+│                     │ JPA / Hibernate │                         │
+└─────────────────────┴─────────────────┴──────────────────────────┘
+                           │
+                           ▼
+                ┌─────────────────────┐
+                │      MySQL DB       │
+                │ Users | Bookings    │
+                └─────────────────────┘
+🗄 Entity Relationship Diagram (ERD)
+bash
+Copy code
+┌──────────────┐         1 ──── n         ┌──────────────┐
+│    USERS     │──────────────────────────│   BOOKINGS    │
+└──────────────┘                          └──────────────┘
+| id (PK)      |                          | id (PK)       |
+| name         |                          | user_id (FK)  |
+| email        |                          | vehicleType   |
+| password     |                          | startDate     |
+| verifiedOTP  |                          | endDate       |
+└──────────────┘                          | status        |
+                                          └──────────────┘
+🔄 Authentication Flow
+pgsql
+Copy code
+User → Signup → Receive OTP → Verify OTP → Account Active
+User → Login → Backend Issues JWT → Access Protected APIs
+Google OAuth Flow:
+mathematica
+Copy code
+Google Token → Backend → Verify Token → Generate JWT → Login Success
+📁 Project Structure
+bash
+Copy code
+VBooking/
+│
+├── FinalProject/                 # Backend (Spring Boot)
+│   ├── controller/
+│   ├── service/
+│   ├── repository/
+│   ├── entity/
+│   ├── security/
+│   └── application.properties
+│
+└── Vbooking/                     # Frontend (React + Vite)
+    ├── src/components/
+    ├── src/services/api.ts
+    ├── src/utils/auth.ts
+    └── vite.config.ts
+⚙️ Backend Setup (Spring Boot)
+1️⃣ Run MySQL
+bash
+Copy code
+docker run --name vbooking-mysql `
+  -e MYSQL_ROOT_PASSWORD=1234 `
+  -e MYSQL_DATABASE=auth_system_db `
+  -p 3306:3306 -d mysql:8.0
+2️⃣ Configure application.properties
+properties
+Copy code
+spring.datasource.url=jdbc:mysql://localhost:3306/auth_system_db
+spring.datasource.username=root
+spring.datasource.password=1234
+
+jwt.secret=CHANGE_THIS_TO_A_256BIT_SECRET
+jwt.expiration=86400000
+
+spring.mail.username=your-email@example.com
+spring.mail.password=your-app-password
+3️⃣ Run Project
+bash
+Copy code
+cd FinalProject
+./mvnw spring-boot:run
+💻 Frontend Setup (React + Vite)
+bash
+Copy code
+cd Vbooking
 npm install
 npm run dev
-# or build for production
-npm run build
-npm run preview  # preview built app
-```
+App opens at:
 
-Frontend default dev server: `http://localhost:5173`. The frontend communicates with the backend API at `http://localhost:8080/api` (set in `Vbooking/src/services/api.ts`).
+👉 http://localhost:5173
 
----
+🔌 API Summary
+AuthController — /api/auth
+Method	Endpoint	Description
+POST	/signup	Start signup + email OTP
+POST	/verify-otp	Verify OTP
+POST	/login	Login with JWT
+POST	/google-login	Google OAuth login
+GET	/check-user/{email}	Check if user exists
+DELETE	/delete-user/{email}	Remove user
 
-## API Endpoints (summary)
-All endpoints are prefixed by `/api` (base path), see controllers below.
+BookingController — /api/bookings
+Method	Endpoint	Description
+POST	/create	Create booking
+GET	/my-bookings	View user bookings
+GET	/upcoming	Upcoming bookings
+GET	/current	Today's bookings
+GET	/past	Past bookings
+GET	/stats	Booking analytics
+PUT	/{id}/cancel	Cancel booking
 
-AuthController (`/api/auth`)
-- POST /auth/signup — Register and receive OTP via email
-- POST /auth/verify-otp — Verify the OTP sent to email
-- POST /auth/login — Login and receive JWT token
-- POST /auth/google-login — Login/Signup via Google OAuth (exchanges Google token)
-- GET /auth/check-user/{email} — Check if user exists & verified
-- DELETE /auth/delete-user/{email} — Delete user by email
-- GET /auth/home — User dashboard (requires authentication)
-- GET /auth/test — Test endpoint
-- GET /auth/test-db — DB connectivity + stats
-- POST /auth/bookings/create — Create a booking for the authenticated user
-- GET /auth/bookings/my-bookings — Get all bookings for user
-- GET /auth/bookings/upcoming — Get upcoming bookings
-- GET /auth/bookings/current — Get current bookings
-- GET /auth/bookings/past — Get past bookings
-- GET /auth/bookings/{bookingId} — Get a booking by ID
-- GET /auth/bookings/stats — Get booking stats for the user
-- PUT /auth/bookings/{bookingId}/cancel — Cancel a booking
+🧪 Testing Backend
+bash
+Copy code
+cd FinalProject
+./mvnw test
+🔒 Security Highlights
+JWT token signing + filters
 
-BookingController (`/api/bookings`) — duplicates some booking endpoints (structured to separate concerns)
-- POST /bookings/create
-- GET /bookings/my-bookings
-- GET /bookings/upcoming
-- GET /bookings/current
-- GET /bookings/past
-- GET /bookings/{bookingId}
-- PUT /bookings/{bookingId}/cancel
-- GET /bookings/stats
+Spring Security config
 
-Security note: JWT authentication uses the Authorization header `Authorization: Bearer <token>` and default CORS is permissive for dev origins.
+Authenticated user context extraction
 
----
+CORS enabled for frontend dev
 
-## Configuration & Environment
-Important configuration properties live in `FinalProject/src/main/resources/application.properties`. You should not commit secrets to version control. Replace placeholder values with real ones in your environment.
+🌍 Environment Variables (Production Recommended)
+makefile
+Copy code
+SPRING_DATASOURCE_URL=
+SPRING_DATASOURCE_USERNAME=
+SPRING_DATASOURCE_PASSWORD=
+JWT_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+MAIL_USERNAME=
+MAIL_PASSWORD=
+📸 Screenshots (Add your images later)
+bash
+Copy code
+/screenshots
+ ├── login.png
+ ├── signup.png
+ ├── dashboard.png
+ └── booking-flow.png
+🤝 Contributing
+Fork the repo
 
-Recommended env changes:
-- Use env vars or a secrets manager in production (e.g., `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`).
-- Rotate the `jwt.secret` value and use strong, random secrets (256-bit key).
-- Set mail credentials and/or use a transactional mail provider (e.g., SendGrid, Mailgun) for production site notifications.
+Create a branch
 
----
+Commit changes
 
-## Database
-- Default MySQL DB: `jdbc:mysql://localhost:3306/auth_system_db` (see `application.properties`)
-- The application uses `spring.jpa.hibernate.ddl-auto=update`. This will create/update schema automatically in dev, but in production prefer managed migrations (Flyway or Liquibase).
+Open a pull request
 
----
+📄 License
+MIT License — free to use and modify.
 
-## Testing
-- Backend: `cd FinalProject` and run:
+📧 Contact
+For any queries or improvements:
+📨 manieerr@gmail.com
 
-```powershell
-.\mvnw.cmd test
-```
-
-- Frontend: Vite app has no test runner in the repository by default; you can add one if needed (e.g., Vitest).
-
----
-
-## Developer notes (observations)
-- Booking endpoints are exposed in both an `AuthController` under `/api/auth/bookings/*` and in a separate `BookingController` under `/api/bookings/*`. The frontend currently uses `/api/auth/bookings/*` paths. It might be cleaner to keep booking endpoints in a single controller.
-- OTP confirmation is handled by an in-memory PendingRegistration map for signup verification. This is ephemeral and will be cleared on app restarts; consider implementing a DB-backed pending registrations or modifying the flow to save and verify OTP in DB for production.
-- Some methods make use of raw strings for statuses (e.g., `CONFIRMED`, `IN_PROGRESS`), which can be converted to enums for better type safety.
-
----
-
-## Important files & structure
-- `FinalProject/` (Backend):
-  - `src/main/java/com/example/FinalProject/controller/` – controllers
-  - `src/main/java/com/example/FinalProject/service/` – core business logic
-  - `src/main/java/com/example/FinalProject/entity/` – JPA entities: `User`, `Booking`
-  - `src/main/java/com/example/FinalProject/repository/` – Spring Data JPA repositories
-  - `src/main/resources/application.properties` – configuration
-  - `pom.xml` – Maven build
-
-- `Vbooking/` (Frontend):
-  - `src/components/` – UI components (Login, Signup, BookingForm, Payment, BookingSuccess)
-  - `src/services/api.ts` – Axios wrapper & api functions
-  - `src/utils/auth.ts` – token storage and client-side helpers
-  - `package.json` – scripts and deps
-
----
-
-## How to contribute
-- Clone the repository
-- Create a feature branch and push PRs with descriptive titles
-- Update this README if adding features or changing config
-
----
-
-## License & Contact
-- This repository includes placeholder values for sample deployments. Confirm licenses you’d like to use in each sub-project.
-- Contact (from project config): manieerr@gmail.com (used for email sending example)
-
----
-
-If you'd like, I can also:
-- Add a sample `.env` / `.properties` file template for secure local setup
-- Add a small `docker-compose.yml` to start MySQL + backend for easier local development
-- Convert in-memory pending registration flow to DB-based
-
-💡 Next: I'll create this README file in the repository now and make sure key configuration info is included.# Vechile-Booking-App-Using-Spring-boot-Backend-
-#   V e c h i l e - B o o k i n g - A p p - U s i n g - S p r i n g - b o o t - B a c k e n d -  
- 
